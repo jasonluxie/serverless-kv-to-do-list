@@ -1,0 +1,6 @@
+name = "your worker name"
+compatibility_date="YYYY-MM-DD"
+main = "worker.js"
+kv_namespaces = [
+  { binding = "name of kv namespace", id = "id of namespace" }
+]
