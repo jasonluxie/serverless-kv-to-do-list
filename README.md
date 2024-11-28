@@ -1,8 +1,9 @@
 # fuzzy-waffle
 
 ## Description
-Note taker using Cloudflare Workers and R2 
+Note taker using Cloudflare workers and worker KV 
 
 ## Technologies
 - [Cloudflare Worker](https://workers.cloudflare.com/)
-- [Cloudflare R2](https://www.cloudflare.com/developer-platform/products/r2/)
+- [Cloudflare KV](https://developers.cloudflare.com/kv/)
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/)
