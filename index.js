@@ -6,9 +6,11 @@ const userLogin = () => {
 };
 
 const submitAndUpdateList = (event) => {
+  event.preventDefault()
     if (event.target.id === "to-do-submit") {
-        const formValue = document.getElementById("to-do-entry").value;
+        let formValue = document.getElementById("to-do-entry").value;
         fetch(worker, { method: "POST", body: formValue });
+        document.getElementById("to-do-entry").value = ""
     }
 };
 
