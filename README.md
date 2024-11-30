@@ -1,7 +1,7 @@
 # fuzzy-waffle
 
 ## Description
-Note taker using Cloudflare workers and worker KV 
+To-do list using Cloudflare workers and worker KV 
 
 ## Technologies
 - [Cloudflare Worker](https://workers.cloudflare.com/)
