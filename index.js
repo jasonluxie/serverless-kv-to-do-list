@@ -1,12 +1,14 @@
 const responseElement = document.getElementById("response");
 const worker = "https://note-taker-kv.jasonluxie.workers.dev/";
 
-const userLogin = () => {
+const peageLoad = () => {
     fetch(worker, {
-        method: "POST",
-        body: { user: "test", trigger: "load" },
+        method: "PUT",
+        body: JSON.stringify({ user: "test", trigger: "load" }),
     })
-        .then((response) => response.text())
+        .then((response) => 
+            response.text()
+        )
         .then((data) => {
             console.log(data);
             responseElement.innerHTML = data;
@@ -21,12 +23,12 @@ const submitAndUpdateList = (event) => {
     if (event.target.id === "to-do-submit") {
         let formValue = document.getElementById("to-do-entry").value;
         fetch(worker, {
-            method: "POST",
-            body: {value: formValue, user:'test', trigger:'add'},
+            method: "PUT",
+            body: { value: formValue, user: "test", trigger: "add" },
         });
         document.getElementById("to-do-entry").value = "";
     }
 };
 
-userLogin();
+peageLoad();
 responseElement.addEventListener("click", submitAndUpdateList);
