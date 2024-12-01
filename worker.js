@@ -5,6 +5,12 @@ export default {
         // const toDoInput = `<form><input type="text" id="to-do-entry"/><input type="submit" id='to-do-submit' value="Add"/></form>`;
         const body = await request.text();
         try {
+            //const parsed = JSON.parse(body)
+            if(getKV(parsed.user)) {
+                getKV(parsed.user).forEach(element => {
+                    //make html for each item in array
+                });
+            }
             const response = new Response(body, { status: 200 });
             response.headers.set(
                 "Access-Control-Allow-Origin",
