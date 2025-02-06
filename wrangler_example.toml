@@ -1,4 +1,4 @@
-name = "your worker name"
+name = "your worker name" 
 compatibility_date="YYYY-MM-DD"
 main = "worker.js"
 kv_namespaces = [
