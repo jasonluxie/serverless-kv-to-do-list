@@ -133,5 +133,5 @@ dist
 wrangler.toml
 .wrangler
 
-index.js
+# notes
 todo.md
