@@ -1,4 +1,4 @@
-# fuzzy-waffle
+# KV To-do
 
 ## Description
 To-do list using Cloudflare workers and worker KV 
