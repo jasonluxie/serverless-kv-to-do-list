@@ -14,7 +14,7 @@ const getFetch = () => {
   })
     .then((response) => response.text())
     .then((data) => {
-      console.log(data);
+      responseElement.innerHTML = data
     })
     .catch((error) => {
       console.error(error);
@@ -22,18 +22,21 @@ const getFetch = () => {
 };
 
 const putFetch = async () => {
-  const testBody = JSON.stringify({ user: "test", password: "password", message: "test" });
+  const testBody = JSON.stringify({
+    user: "test",
+    password: "password",
+    message: "test",
+  });
   try {
     const response = await fetch(worker, {
       method: "PUT",
-      body: testBody
+      body: testBody,
     });
 
     const data = await response.text();
     const parsedData = await JSON.parse(data);
     console.log(parsedData);
     responseElement.innerHTML = data;
-
   } catch (error) {
     console.error(error);
   }
@@ -44,9 +47,7 @@ const pageLoad = () => {
   // putFetch();
 };
 
-
-
-putButton.addEventListener("click", putFetch);
+// putButton.addEventListener("click", putFetch);
 // const submitAndUpdateList = (event) => {
 //     event.preventDefault();
 //     if (event.target.id === "to-do-submit") {
