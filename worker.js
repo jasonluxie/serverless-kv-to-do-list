@@ -2,8 +2,10 @@ export default {
   async fetch(request, env, ctx) {
     const setKV = (user, data) => env.todokv.put(user, data);
     const getKV = (user) => env.todokv.get(user);
-    
-    const loginModal = `<div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+
+    const html = (toDoList) = `
+      <h1 class="font-mono"><span id="username"></span>To-Do List</h1>
+      <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-lg p-6 w-96">
           <h2 class="text-2xl font-bold mb-4">Login</h2>
           <form id="loginForm">
@@ -16,12 +18,36 @@ export default {
               <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded" required>
             </div>
             <div class="flex justify-end">
-              <button type="button" id="closeModalBtn" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
               <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
             </div>
           </form>
         </div>
-      </div>`;
+      </div>
+      <script type="module">
+        console.log('hello')
+        const loginSignup = async () => {
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          const userBody = JSON.stringify({
+            user: username,
+            password: password,
+          });
+          try {
+            const response = await fetch(worker, {
+              method: "PUT",
+              body: userBody,
+            });
+          } catch (err) {
+            console.error(err);
+          }
+        };
+        document.getElementById("loginForm").addEventListener("submit", (event) => {
+          console.log('hello');
+          event.preventDefault();
+          loginSignup();
+        });
+      </script>
+  `;
 
     const toDoInput = `<form><input type="text" id="to-do-entry"/><input type="submit" id='to-do-submit' value="Add"/></form>`;
     const body = await request.text();
@@ -54,19 +80,27 @@ export default {
         });
 
       case "PUT":
-        const testInfo = JSON.stringify({
-          password: bodyJSON.password,
-          list: [bodyJSON.message],
-        });
-        const setInfo = await setKV(bodyJSON.user, testInfo);
-        console.log(setInfo);
-        const returnedInfo = await getKV(bodyJSON.user);
-        return new Response(returnedInfo, {
-          status: 200,
-          headers: {
-            ...corsHeaders,
-          },
-        });
+        if (bodyJSON.type === "login") {
+          const userInfo = await getKV(bodyJSON.user);
+          console.log(userInfo);
+          if (userInfo) {
+            const parsedUserInfo = JSON.parse(userInfo);
+            if (parsedUserInfo.password === bodyJSON.password) {
+              return new Response(toDoInput, {
+                status: 200,
+                headers: {
+                  ...corsHeaders,
+                },
+              });
+            }
+          }
+          return new Response("Invalid login", {
+            status: 401,
+            headers: {
+              ...corsHeaders,
+            },
+          });
+        }
 
       case "DELETE":
         return new Response("DELETE", {
@@ -75,6 +109,7 @@ export default {
             ...corsHeaders,
           },
         });
+
       default:
         return new Response("Method not allowed", {
           status: 405,
@@ -83,6 +118,5 @@ export default {
           },
         });
     }
-    w;
   },
 };
