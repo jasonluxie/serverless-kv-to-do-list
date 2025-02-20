@@ -17,31 +17,15 @@ const getFetch = () => {
   })
     .then((response) => response.text())
     .then((data) => {
-      responseEl.innerHTML = data;
-      const script = document.createElement("script");
-      script.innerHTML = `
-        const loginSignup = async () => {
-          const username = document.getElementById("username").value;
-          const password = document.getElementById("password").value;
-          const userBody = JSON.stringify({
-            user: username,
-            password: password,
-          });
-          try {
-            const response = await fetch(worker, {
-              method: "PUT",
-              body: userBody,
-            });
-          } catch (err) {
-            console.error(err);
-          }
-        };
-        document.getElementById("loginForm").addEventListener("submit", (event) => {
-          event.preventDefault();
-          loginSignup();
-        });
-      `;
-      document.body.appendChild(script);
+      const parser = new DOMParser();
+      const parsedData = parser.parseFromString(data, "text/html");
+      const parsedModal = parsedData.getElementById("modal");
+      const parsedScript = parsedData.getElementsByTagName("script");
+      const scriptEl = document.createElement("script");
+      scriptEl.textContent = parsedScript[0].textContent;
+      console.log(parsedData);
+      responseEl.appendChild(parsedModal);
+      responseEl.appendChild(scriptEl);
     })
     .catch((error) => {
       console.error(error);

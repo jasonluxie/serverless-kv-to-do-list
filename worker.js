@@ -23,6 +23,33 @@ export default {
           </form>
         </div>
       </div>
+      <script>
+      const loginSignup = async () => {
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          const userBody = JSON.stringify({
+            user: username,
+            password: password,
+          });
+          console.log(userBody)
+          try {
+          console.log('hello')
+            const response = await fetch(worker, {
+              method: "PUT",
+              body: userBody,
+            })
+          const data = await response.text();
+          const parsedData = await JSON.parse(data);
+          console.log(parsedData);;
+          } catch (err) {
+            console.error(err);
+          }
+        };
+        document.getElementById("loginForm").addEventListener("submit", (event) => {
+          event.preventDefault();
+          loginSignup();
+})
+      </script>
   `;
 
     const toDoInput = `<form><input type="text" id="to-do-entry"/><input type="submit" id='to-do-submit' value="Add"/></form>`;
