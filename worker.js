@@ -3,7 +3,7 @@ export default {
     const setKV = (user, data) => env.todokv.put(user, data);
     const getKV = (user) => env.todokv.get(user);
 
-    const html = (toDoList) = `
+    const loginModal = `
       <h1 class="font-mono"><span id="username"></span>To-Do List</h1>
       <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-lg p-6 w-96">
@@ -23,30 +23,6 @@ export default {
           </form>
         </div>
       </div>
-      <script type="module">
-        console.log('hello')
-        const loginSignup = async () => {
-          const username = document.getElementById("username").value;
-          const password = document.getElementById("password").value;
-          const userBody = JSON.stringify({
-            user: username,
-            password: password,
-          });
-          try {
-            const response = await fetch(worker, {
-              method: "PUT",
-              body: userBody,
-            });
-          } catch (err) {
-            console.error(err);
-          }
-        };
-        document.getElementById("loginForm").addEventListener("submit", (event) => {
-          console.log('hello');
-          event.preventDefault();
-          loginSignup();
-        });
-      </script>
   `;
 
     const toDoInput = `<form><input type="text" id="to-do-entry"/><input type="submit" id='to-do-submit' value="Add"/></form>`;
