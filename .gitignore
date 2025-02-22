@@ -133,5 +133,6 @@ dist
 wrangler.toml
 .wrangler
 
-# notes
+# project-specific
+test.js
 todo.md
