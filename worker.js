@@ -4,7 +4,6 @@ export default {
     const getKV = (user) => env.todokv.get(user);
 
     const loginModalAndScript = `
-      <h1 class="font-mono"><span id="user"></span>To-Do List</h1>
       <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-lg p-6 w-96">
           <h2 class="text-2xl font-bold mb-4">Login</h2>
@@ -47,16 +46,15 @@ export default {
             const data = await response.text();
             const modal = document.getElementById("modal");
             modal.classList.add("hidden");
-            const todoEl = document.getElementById("todo");
             const toDoSection = document.getElementById("to-do-section");
             const parser = new DOMParser();
             const parsedToDo = parser.parseFromString(data, "text/html");
             const parsedToDoInfo = parsedToDo.getElementById("to-do-info");
+            toDoSection.innerHTML = parsedToDoInfo.innerHTML;
             if (!document.getElementById('to-do-script')) {
               const parsedToDoScript = parsedToDo.getElementById("to-do-script");
-              toDoSection.innerHTML = parsedToDoInfo.innerHTML;
               const toDoScript = document.createElement("script");
-              toDoScript.setAttribute('id', 'to-do-script')
+              toDoScript.setAttribute('id', 'to-do-script');
               toDoScript.textContent = parsedToDoScript.textContent;
               toDoSection.after(toDoScript);
             }
@@ -75,7 +73,7 @@ export default {
       let listItems = items
         .map(
           (item, index) => `
-          <div clas="flex items-center space-x-4" data-id="${index}">
+          <div class="flex items-center space-x-4" data-id="${index}">
             <input type="checkbox" id="to-do-${index}" ${
             item.completed ? "checked" : ""
           } class="mr-2">
@@ -85,16 +83,20 @@ export default {
         )
         .join("");
       return `
-        <section id='to-do-info'>
-          <form class="flex items-center space-x-4" id='to-do-form'>
-            <input type="text" id="to-do-entry" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your to-do item" />
-            <input type="submit" id="to-do-submit" value="Add" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer" />
-          </form>
-          <div id="to-do-list">
-            ${listItems}
-          </div>
-        </section>
+        <section id='to-do-info' class="flex flex-col items-center justify-center min-h-screen">
+            <h1 class="font-mono text-3xl text-center mb-4"><span id="user"></span>to-do List</h1>
+            <div class="w-full md:w-1/2 flex justify-center">
+              <form class="flex flex-col md:flex-row items-center space-x-4 w-full" id='to-do-form'>
+                <input type="text" id="to-do-entry" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your to-do item" />
+                <input type="submit" id="to-do-submit" value="Add" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer mt-2 md:mt-0" />
+              </form>
+            </div>
+            <div id="to-do-list" class="mt-4 w-full max-w-md">
+              ${listItems}
+            </div>
+          </section>
           <script id="to-do-script">
+            document.getElementById("user").textContent = username + "'s ";
             const addToDoItem = async (event) => {
               event.preventDefault();
               const entry = document.getElementById("to-do-entry").value;
@@ -147,6 +149,7 @@ export default {
               }
             };
             const attachEventListeners = () => {
+              document.getElementById("user").textContent = username + "'s ";
               document.getElementById("to-do-form").addEventListener("submit", addToDoItem);
               document.getElementById("to-do-list").addEventListener("click", (event) => {
                 if (event.target.type === "checkbox") {
@@ -161,21 +164,23 @@ export default {
 
     const body = await request.text();
     let bodyJSON;
-    if  (body) {
+    if (body) {
       bodyJSON = JSON.parse(body);
     }
-    let userInfo
-    let workableUser
+    let userInfo;
+    let workableUser;
     if (bodyJSON && bodyJSON.user) {
       userInfo = await getKV(bodyJSON.user);
       workableUser = JSON.parse(userInfo);
+      console.log('173', userInfo, workableUser);
     }
 
     const corsHeaders = {
-      "Access-Control-Allow-Origin": "http://127.0.0.1:5500", // Change to deployment website later
+      "Access-Control-Allow-Origin": "http://127.0.0.1:5500",
       "Access-Control-Allow-Methods": "GET,PUT,DELETE,OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     };
+
     console.log(request.method);
     switch (request.method) {
       case "OPTIONS":
@@ -206,9 +211,8 @@ export default {
         if (bodyJSON.type === "login") {
           console.log(userInfo);
           if (userInfo !== null) {
-            const parsedUserInfo = JSON.parse(userInfo);
-            if (parsedUserInfo.password === bodyJSON.password) {
-              return new Response(generateToDoList(parsedUserInfo.list), {
+            if (workableUser.password === bodyJSON.password) {
+              return new Response(generateToDoList(workableUser.list), {
                 status: 200,
                 headers: {
                   ...corsHeaders,
@@ -228,8 +232,6 @@ export default {
               list: [],
             };
             await setKV(bodyJSON.user, JSON.stringify(newUser));
-            const userInfo = await getKV(bodyJSON.user);
-            const parsedUserInfo = JSON.parse(userInfo);
             return new Response(generateToDoList(parsedUserInfo.list), {
               status: 200,
               headers: {
@@ -238,7 +240,7 @@ export default {
             });
           }
         } else if (bodyJSON.type === "update") {
-          if (bodyJSON.password !== userInfo.password) {
+          if (bodyJSON.password !== workableUser.password) {
             return new Response("Invalid user", {
               status: 401,
               headers: {
