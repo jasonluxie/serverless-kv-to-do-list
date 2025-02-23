@@ -172,7 +172,6 @@ export default {
     if (bodyJSON && bodyJSON.user) {
       userInfo = await getKV(bodyJSON.user);
       workableUser = JSON.parse(userInfo);
-      console.log('173', userInfo, workableUser);
     }
 
     const corsHeaders = {
@@ -181,7 +180,6 @@ export default {
       "Access-Control-Allow-Headers": "Content-Type",
     };
 
-    console.log(request.method);
     switch (request.method) {
       case "OPTIONS":
         return new Response(null, {
@@ -209,7 +207,6 @@ export default {
           });
         }
         if (bodyJSON.type === "login") {
-          console.log(userInfo);
           if (userInfo !== null) {
             if (workableUser.password === bodyJSON.password) {
               return new Response(generateToDoList(workableUser.list), {
