@@ -87,7 +87,7 @@ export default {
             <h1 class="font-mono text-3xl text-center mb-4"><span id="user"></span>to-do List</h1>
             <div class="w-full md:w-1/2 flex justify-center">
               <form class="flex flex-col md:flex-row items-center space-x-4 w-full" id='to-do-form'>
-                <input type="text" id="to-do-entry" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your to-do item" />
+                <input type="text" id="to-do-entry" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your to-do item" required/>
                 <input type="submit" id="to-do-submit" value="Add" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer mt-2 md:mt-0" />
               </form>
             </div>
@@ -99,7 +99,11 @@ export default {
             document.getElementById("user").textContent = username + "'s ";
             const addToDoItem = async (event) => {
               event.preventDefault();
-              const entry = document.getElementById("to-do-entry").value;
+              const entry = document.getElementById("to-do-entry").value.trim();
+              if (entry === "") {
+                console.error('Item cannot be empty or whitespace')
+                return
+              }
               const toDoBody = JSON.stringify({
                 user: username,
                 password: password,
@@ -125,16 +129,17 @@ export default {
             };
             const deleteToDoItem = async (event) => {
               event.preventDefault();
-              const toDoBody = JSON.stringify({
+              const checkboxID = event.target.closest('div[data-id]').dataset.id;  
+              const deleteBody = JSON.stringify({
                 user: username,
                 password: password,
-                item: event.target.dataset.id,
+                item: checkboxID,
                 type: "delete",
               });
               try {
                 const response = await fetch(worker, {
                   method: "DELETE",
-                  body: toDoBody,
+                  body: deleteBody,
                 });
                 if (response.ok) {
                   const data = await response.text();
@@ -175,7 +180,7 @@ export default {
     }
 
     const corsHeaders = {
-      "Access-Control-Allow-Origin": "https://todo.jasonluxie.fun",
+      "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,PUT,DELETE,OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     };
@@ -267,10 +272,8 @@ export default {
             },
           });
         } else {
-          const editUser = await getKV(bodyJSON.user);
-          const workableEditUser = JSON.parse(editUser);
-          workableEditUser.list.splice(bodyJSON.item, 1);
-          await setKV(bodyJSON.user, JSON.stringify(workableEditUser));
+          workableUser.list.splice(bodyJSON.item, 1);
+          await setKV(bodyJSON.user, JSON.stringify(workableUser));
           const returnUser = await getKV(bodyJSON.user);
           const workableReturnUser = JSON.parse(returnUser);
           return new Response(generateToDoList(workableReturnUser.list), {
