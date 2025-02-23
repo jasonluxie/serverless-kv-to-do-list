@@ -21,13 +21,14 @@ const getFetch = () => {
       const parser = new DOMParser();
       const parsedData = parser.parseFromString(data, "text/html");
       const modal = parsedData.getElementById("modal");
-      const toDoEntry = parsedData.getElementById("todo");
+      const toDoEntry = parsedData.getElementById("to-do-section");
       const parsedScript = parsedData.getElementsByTagName("script");
       const modalScript = document.createElement("script");
       modalScript.textContent = parsedScript[0].textContent;
       responseEl.appendChild(modal);
       responseEl.appendChild(toDoEntry);
       responseEl.appendChild(modalScript);
+      let username, password
     })
     .catch((error) => {
       console.error(error);
