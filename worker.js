@@ -23,7 +23,7 @@ export default {
           </form>
         </div>
       </div>
-      <section id='to-do-section'></section>
+       <section id='to-do-section' class="flex flex-col items-center justify-center min-h-screen"></section>
       <script>
       const loginSignup = async () => {
         username = document.getElementById("username").value;
@@ -87,7 +87,7 @@ export default {
             <h1 class="font-mono text-3xl text-center mb-4"><span id="user"></span>to-do List</h1>
             <div class="w-full md:w-1/2 flex justify-center">
               <form class="flex flex-col md:flex-row items-center space-x-4 w-full" id='to-do-form'>
-                <input type="text" id="to-do-entry" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your to-do item" required/>
+                <input type="text" id="to-do-entry" class="w-full px-3 py-2 min-w-[400px] border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your to-do item" required/>
                 <input type="submit" id="to-do-submit" value="Add" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer mt-2 md:mt-0" />
               </form>
             </div>
