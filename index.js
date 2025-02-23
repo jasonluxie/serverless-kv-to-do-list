@@ -7,7 +7,7 @@ const worker =
 const responseEl = document.getElementById("response");
 
 const requestHeaders = {
-  Origin: "http://127.0.0.1:5500/",
+  Origin: "todo.jasonluxie.fun",
   "Access-Control-Request-Method": "GET, PUT, DELETE",
   "Access-Control-Request-Headers": "Content-Type",
 };
