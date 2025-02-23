@@ -6,7 +6,7 @@ export default {
     const loginModalAndScript = `
       <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-lg p-6 w-96">
-          <h2 class="text-2xl font-bold mb-4">Login</h2>
+          <h2 class="text-2xl font-bold mb-4">Login or Signup</h2>
           <form id="loginForm">
             <div class="mb-4">
               <label for="username" class="block text-gray-700">Username</label>
@@ -17,7 +17,7 @@ export default {
               <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded" required>
             </div>
           <div class="flex justify-between items-center">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
             <div id="error-message" class="text-red-500 hidden">Invalid password, please try again</div>
           </div>
           </form>
@@ -175,7 +175,7 @@ export default {
     }
 
     const corsHeaders = {
-      "Access-Control-Allow-Origin": "http://127.0.0.1:5500",
+      "Access-Control-Allow-Origin": "https://todo.jasonluxie.fun",
       "Access-Control-Allow-Methods": "GET,PUT,DELETE,OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     };
